@@ -2,21 +2,27 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"github.com/fiorix/wsdl2go/soap"
 	"testing"
 
-	"github.com/hooklift/gowsdl/soap"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/zoxpx/gosoapTest/myservice"
+	"github.com/zoxpx/gosoapTest/calculatorsoap12"
 )
 
-var calc myservice.CalculatorSoap
+var calc2 calculatorsoap12.CalculatorSoap
 
-func TestAdd(t *testing.T) {
+func init() {
+	calc2 = calculatorsoap12.NewCalculatorSoap(&soap.Client{
+		URL:       "http://www.dneonline.com/calculator.asmx",
+		Namespace: calculatorsoap12.Namespace,
+	})
+}
+
+func TestWsdl2goAdd(t *testing.T) {
 	data := []struct {
-		a, b   int32
-		expect int32
+		a, b   int
+		expect int
 	}{
 		{123, 456, 579},
 		{456, -123, 333},
@@ -27,7 +33,7 @@ func TestAdd(t *testing.T) {
 		lab := fmt.Sprintf("%d+(%d)", td.a, td.b)
 		t.Run(lab, func(t *testing.T) {
 			t.Parallel()
-			resp, err := calc.Add(&myservice.Add{
+			resp, err := calc2.Add(&calculatorsoap12.Add{
 				IntA: td.a,
 				IntB: td.b,
 			})
@@ -38,10 +44,10 @@ func TestAdd(t *testing.T) {
 	}
 }
 
-func TestSubtract(t *testing.T) {
+func TestWsdl2goSubtract(t *testing.T) {
 	data := []struct {
-		a, b   int32
-		expect int32
+		a, b   int
+		expect int
 	}{
 		{123, 456, -333},
 		{456, -123, 579},
@@ -52,7 +58,7 @@ func TestSubtract(t *testing.T) {
 		lab := fmt.Sprintf("%d-(%d)", td.a, td.b)
 		t.Run(lab, func(t *testing.T) {
 			t.Parallel()
-			resp, err := calc.Subtract(&myservice.Subtract{
+			resp, err := calc2.Subtract(&calculatorsoap12.Subtract{
 				IntA: td.a,
 				IntB: td.b,
 			})
@@ -63,10 +69,10 @@ func TestSubtract(t *testing.T) {
 	}
 }
 
-func TestMultiply(t *testing.T) {
+func TestWsdl2goMultiply(t *testing.T) {
 	data := []struct {
-		a, b   int32
-		expect int32
+		a, b   int
+		expect int
 	}{
 		{123, 456, 56088},
 		{456, -123, -56088},
@@ -77,7 +83,7 @@ func TestMultiply(t *testing.T) {
 		lab := fmt.Sprintf("%d*(%d)", td.a, td.b)
 		t.Run(lab, func(t *testing.T) {
 			t.Parallel()
-			resp, err := calc.Multiply(&myservice.Multiply{
+			resp, err := calc2.Multiply(&calculatorsoap12.Multiply{
 				IntA: td.a,
 				IntB: td.b,
 			})
@@ -88,10 +94,10 @@ func TestMultiply(t *testing.T) {
 	}
 }
 
-func TestDivide(t *testing.T) {
+func TestWsdl2goDivide(t *testing.T) {
 	data := []struct {
-		a, b   int32
-		expect int32
+		a, b   int
+		expect int
 	}{
 		{123, 456, 0},
 		{456, 123, 4},
@@ -102,7 +108,7 @@ func TestDivide(t *testing.T) {
 		lab := fmt.Sprintf(" %d/(%d)", td.a, td.b)
 		t.Run(lab, func(t *testing.T) {
 			t.Parallel()
-			resp, err := calc.Divide(&myservice.Divide{
+			resp, err := calc2.Divide(&calculatorsoap12.Divide{
 				IntA: td.a,
 				IntB: td.b,
 			})
@@ -111,9 +117,4 @@ func TestDivide(t *testing.T) {
 			assert.Equal(t, td.expect, resp.DivideResult)
 		})
 	}
-}
-
-func TestMain(m *testing.M) {
-	calc = myservice.NewCalculatorSoap(soap.NewClient("http://www.dneonline.com/calculator.asmx"))
-	os.Exit(m.Run())
 }
