@@ -16,6 +16,26 @@ func init() {
 	calc = myservice.NewCalculatorSoap(soap.NewClient("http://www.dneonline.com/calculator.asmx"))
 }
 
+/*
+ * sends following:
+```
+User-Agent:       gowsdl/0.1
+Connection:       close
+Content-Length:   206
+Content-Type:     text/xml; charset="utf-8"
+Soapaction:       http://tempuri.org/Add
+Accept-Encoding:  gzip
+
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+  <Body xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+    <Add xmlns="http://tempuri.org/">
+      <intA>123</intA>
+      <intB>-456</intB>
+    </Add>
+  </Body>
+</Envelope>
+```
+*/
 func TestGowsdlAdd(t *testing.T) {
 	data := []struct {
 		a, b   int32

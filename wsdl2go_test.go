@@ -19,6 +19,26 @@ func init() {
 	})
 }
 
+/*
+ * sends following:
+```
+Host:             www.dneonline.com
+User-Agent:       Go-http-client/1.1
+Content-Length:   300
+Content-Type:     application/soap+xml; charset=utf-8; action="http://tempuri.org/Subtract"
+Accept-Encoding:  gzip
+
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://tempuri.org/"
+xmlns:tns="http://tempuri.org/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SOAP-ENV:Body>
+    <Subtract>
+      <intA>123</intA>
+      <intB>-456</intB>
+    </Subtract>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+```
+*/
 func TestWsdl2goAdd(t *testing.T) {
 	data := []struct {
 		a, b   int
